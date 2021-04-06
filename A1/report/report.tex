@@ -1,0 +1,74 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{paralist}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\oddsidemargin 0mm
+\evensidemargin 0mm
+\textwidth 160mm
+\textheight 200mm
+\pagestyle {plain}
+\pagenumbering{arabic}
+\newcounter{stepnum}
+\title{Assignment 1 Solution}
+\author{Daniel Guoussev-Donskoi, guoussed}
+\date{\today}
+\begin {document}
+\maketitle
+This report discusses testing of the \verb|ComplexT| and \verb|TriangleT|
+classes written for Assignment 1. It also discusses testing of the partner's
+version of the two classes. The design restrictions for the assignment
+are critiqued and then various related discussion questions are answered.
+\section{Assumptions and Exceptions} \label{AssumptAndExcept}
+~\newline\noindent The following Assumptions were made:
+\begin{itemize}
+\item Inputs x and y were always assumed to be floating point numbers or integers when passed to the \verb|ComplexT| constructor.(Essentially assuming the input was the correct type described in the Assignment outline).
+\item Methods such as \verb|equal| were assumed to receive proper input of a \verb|ComplexT| object.
+\item It was assumed for the method \verb|get_phi| that the \verb|ComplexT| object it was called upon represented a non-zero complex number, and was not equal to 0 + 0i as that would result in an undefined phase.
+\item It was assumed for the method \verb|recip| that the \verb|ComplexT| object it was called upon represented a non-zero complex number, and was not equal to 0 + 0i as that would result in an undefined reciprocal.
+\item It was assumed for the method \verb|div| that the \verb|ComplexT| object being used as the divisor represented a non-zero complex number, and was not equal to 0 + 0i as that would result in an undefined quotient.
+\item The methods for \verb|get_phi|, \verb|get_r| and \verb|sqrt| all rounded the float returned by them to two decimal places, so the test cases for all three of said modules expected floats rounded to two decimal places.
+\item \verb|TriangleT| assumes that the parameters passed to it's constructor are three positive integer values
+\item Method \verb|equal| assumes that the \verb|TriangleT| used for the comparison is a valid object of class \verb|TriangleT|
+\end{itemize}
+\section{Test Cases and Rationale} \label{Testing}
+Due to assumptions for edge cases already being documented, test cases for edge cases regarding \verb|ComplexT| object's were documented instead of implemented as exceptions, and thus test cases were not designed for inputs of zero for \verb|ComplexT| objects or zero/negative inputs for \verb|TriangleT|. Simple getter methods only used a couple tests to ensure they functioned correctly, as all they did was obtain certain values from an Object. However, more complicated methods that produced new Objects from a combination of objects, or methods that can produced many outputs(Such as \verb|TriType|) had more test cases because of the large variation in potentially valid objects as seen in \verb|ComplexT|. For this reason, I used both positive and wholly negative complex numbers, as well as ones that cancelled one another out entirely. For \verb|TriangleT|, I carried out more tests when it came to \verb|TriType| because one can easily test for all of the results that can be created by an enumerated type, as well as because there can be overlap in the results. This is because a triangle can be both right and isoceles simultaneously, which is why I tested for this specifically(So that it would return right over isoceles, as I documented in my assumption). 
+\section{Results of Testing Partner's Code}
+All test cases were passed, save for those implemented for the modules \verb|get_phi|, \verb|get_r| and \verb|sqrt|.The reason for these failures is the same in all cases, when I implemented those three modules, I implemented rounding, and rounded the floats returned by all three to two decimal places. My partner however, used the built in cmath module to return the whole float, and did not round, causing the values to not be equal. In retrospect, I could have implemented a "close enough" case in my test case, where if the float returned by  \verb|get_phi| was reasonably close to my rounded answer, it would have passed.
+\section{Critique of Given Design Specification}
+The main and most obvious drawback of the Given Design Specification was it's vagueness and ambiguity, particularly regarding it's handling of edge cases. Due to the mathematical nature of the modules assigned to be written, many of the modules had edge cases that would return an undefined value, even if the input provided was ostensibly "valid". Another issue with the specification was that it was vague on how to handle improper input, and followups were required to determine whether it should be documented as an assumption, or thrown as an exception depending on the case. For both of these, I would recommend additional documentation of both these things in the Design Specification, as well as complete clarity on which approach to use in which case, to better suit the requirements.
+In regards to the Design's strengths however, I liked the modular and compartmentalised nature of the methods within the classes defined. It made it extremely easy to debug issues with the code, and made the code both readable and easy to understand as well as document. Each method has a clearly defined purpose and while they CAN be used in conjunction with one another, it remains clear which components belong to which method. This also actually made it quite easy to fake a rational design process, as a process from Design, to development plan to implementation is very easy to follow for each individual method. I also liked that all the methods implemented served a clear purpose, with each being extremely effective at producing reliability. I never once felt confused about what a particular method was meant to do generally, as a requirement. However, the requirements weren't exactly helpful for producing robustness or correctness, due to their lack of description for edge cases, how to deal with errors or incorrect input.
+I also liked the formality of the way the Design Specification laid out the Classes should be defined, as they directly stated what sort of input should be passed, and what should be returned for each and every method, making the methods both very uniform in how they were structured, but also very easy to utilise and effective at interacting with one another when used. 
+\section{Answers to Questions}
+\begin{enumerate}[(a)]
+\item For \verb|ComplexT|, the clear getters were \verb|real|, \verb|imag|, \verb|get_r|, \verb|get_phi| and \verb|sqrt|. For \verb|TriangleT|, the clear getter was \verb|get_sides|. All of these methods "got" or returned properties of a class instance and are thus "getters". However, I wouldn't really categorise any of the other methods as "setters" as setters are mutators, and the other methods return entirely new objects, rather than mutating existing ones.
+\item We could assign state variables for the type of triangle and it's area for TriangleT and could assign variables for the modulus and phase of ComplexT.
+\item I would say it does not make sense to implement a greater or less than method for ComplexT, both from a mathematical and programming perspective. From a programming perspective, the \verb|equal| method does not compare mathematical size or order, it compares two objects to see if they have the same properties assigned to them. This is because from a mathematical perspective, complex numbers do not have a set order like natural numbers, they are a plane, not uni dimensional. The only way I could see referring to complex numbers as "greater" or "less than" one another is using the modulus and their magnitude from the point of origin, but I still wouldn't consider this worthy of implementing as it's own method due to this declaring a complex number with two negative components but a larger modulus to be "greater" than one with two positive components but a smaller modulus.
+\item It is perfectly possible to provide invalid integer values to TriangleT when forming a triangle, as according to the triangle inequality theorem, if the sum of two sides of a triangle are smaller than the remaining side, they cannot form a triangle(They will be too short). Thus, this is easy to test for, by checking using conditionals if any side is bigger than the sum of the other two. In this case, an external module could check to see if the object being initialised can in fact make a correct triangle, and raise an error if not.
+\item If TriangleT were to have a state variable for the type of triangle, said state variable could be modified, which is something you would absolutely not want to do accidentally as this could result in the software deciding that a triangle with three side lengths of length 6 each per say, was isoceles all of a sudden. Something we definitely do not want.
+\item Performance refers to how well software fulfills the external requirements set for it, in terms of speed and storage, specifically how "efficient" it is. Usability on the other hand, refers to the ability of others to use or easily employ software. The relationship here is clear, poor performance will lead to others being unable to use your software and decreased usability as a whole. Thus, good performance improves usability of a piece of software, while poor performance will do the opposite.
+\item In the overwhelming majority of software projects you will absolutely want to fake a rational design process, in order to have a better method of measuring progress, to improve the rational decisions you yourself will make as the project progresses and to provide better guidance as to what has to be done next. These components are so vital on larger projects that there is no larger project where you wouldn't want to fake a rational design process. The only case I can think of where you wouldn't bother is in an extremely small bit of code, or module, simply because it wouldn't be worth the time or effort. However even then, I would often recommend faking a rational design process, just to maintain good practices.
+\item To reuse software, is to use software that has already been made and re purpose it for another task, increasing it's reliability because it's individual components have already been shown to function correctly before, and the challenge becomes less building from scratch and more building on top of or redesigning that which has already been built.
+\item Most conventionally known programming languages(Python, C, Java) are "higher level languages", that is to say they're not actually carrying out tasks themselves so much as they issue instructions to lower level, assembly languages who interpret those higher level programs as a series of smaller instructions, stored in registers. This assembly code is in turn, read by the OS and converted into machine code actually readable by the hardware which actually executes the tasks we need it to. This perfectly shows how higher level programming languages are best described as abstractions of what we want a machine to "do", and are passed down and converted to a form that a machine can actually understand. The comparison I would use, is an architect sketching out a building, and passing it down to a site supervisor who passes it down to the actual construction workers. Essentially every step is an "abstract" of what the next stage is to do.
+\end{enumerate}
+\newpage
+\lstset{language=Python, basicstyle=\tiny, breaklines=true, showspaces=false,
+  showstringspaces=false, breakatwhitespace=true}
+%\lstset{language=C,linewidth=.94\textwidth,xleftmargin=1.1cm}
+\def\thesection{\Alph{section}}
+\section{Code for complex\_adt.py}
+\noindent \lstinputlisting{../src/complex_adt.py}
+\newpage
+\section{Code for triangle\_adt.py}
+\noindent \lstinputlisting{../src/triangle_adt.py}
+\newpage
+\section{Code for test\_driver.py}
+\noindent \lstinputlisting{../src/test_driver.py}
+\newpage
+\section{Code for Partner's complex\_adt.py}
+\noindent \lstinputlisting{../partner/complex_adt.py}
+\section{Code for Partner's triangle\_adt.py}
+\noindent \lstinputlisting{../partner/triangle_adt.py}
+\end {document}
+

@@ -1,0 +1,73 @@
+## @file complex_adt.py
+#  @author Daniel Guoussev-Donskoi
+#  @title ComplexT
+#  @date January 15th, 2020
+
+## @brief This class represents a complex number
+# @details This class represents a complex number as a an (x,y) pair of 
+# real and imaginary components respectively
+import math
+class ComplexT:
+  #Brief
+  def __init__(self, x, y):
+    self.__x = x
+    self.__y = y
+
+  def real(self):
+      return self.__x
+  def imag(self):
+      return self.__y
+  def get_r(self):
+      first = (self.__x)**2
+      second = (self.__y)**2
+      final = (first + second)**0.5
+      return final
+  def get_phi(self):
+      first = (self.__x)
+      second = (self.__y)
+      t = (second / first)
+      final = math.atan(t)
+      return final
+  def equal(self,compare):
+      if (self.__x == compare.__x) & (self.__y == compare.__y):
+        return True
+      else:
+        return False
+  def conj(self):
+    final = ComplexT(self.__x,-self.__y)
+    return final
+  def add(self,other):
+    newx = self.__x + other.__x
+    newy = self.__y + other.__y
+    final = ComplexT(newx,newy)
+    return final
+  def sub(self,other):
+    newx = self.__x - other.__x
+    newy = self.__y - other.__y
+    final = ComplexT(newx,newy)
+    return final   
+  def mult(self,other):
+    a = self.__x* other.__x
+    b = (self.__x*other.__y) + (self.__y*other.__x)
+    c = (self.__y * other.__y * (-1))
+    real = a + c
+    imag = b
+    final = ComplexT(real,imag)
+    return final
+  def recip(self):
+    x = self.__x
+    y = self.__y
+    real = (x / ((x**2)+(y**2)))
+    imag = -(y / ((x**2)+(y**2)))
+    final = ComplexT(real,imag)
+    return final
+  def div(self,other):
+    a = self.__x
+    b = self.__y
+    c = other.__x
+    d = other.__y
+    real = ( ((a * c)+(b * d)) / ((c**2)+(d**2)) )
+    imag = ( ((b * c)-(a * d)) / ((c**2)+(d**2)) )
+    final = ComplexT(real,imag)
+    return final
+
