@@ -5,4 +5,4 @@ A1: Modules relating to simulating complex numbers and triangles and associated 
 
 A2: Modules relating to simulating an object moving through space and associated methods
 
-A3(In progress): Modules simulating the popular game 2048, as well as design specs.
+A3 : Modules simulating the popular game 2048
